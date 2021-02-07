@@ -120,6 +120,10 @@ typedef struct UIScene {
   cereal::HealthData::PandaType pandaType;
   NetStatus athenaStatus;
 
+  std::string track_name;
+  uint64_t gps_planner_points_timestamp;
+  cereal::GPSPlannerPoints::Reader gps_planner_points;
+
   cereal::ThermalData::Reader thermal;
   cereal::RadarState::LeadData::Reader lead_data[2];
   cereal::CarState::Reader car_state;

@@ -41,7 +41,7 @@ static void ui_init_vision(UIState *s) {
 
 void ui_init(UIState *s) {
   s->sm = new SubMaster({"modelV2", "controlsState", "uiLayoutState", "liveCalibration", "radarState", "thermal", "frame",
-                         "health", "carParams", "driverState", "driverMonitoringState", "sensorEvents", "carState"});
+                         "health", "carParams", "driverState", "driverMonitoringState", "sensorEvents", "carState", "gpsPlannerPoints"});
 
   s->started = false;
   s->status = STATUS_OFFROAD;
@@ -183,6 +183,11 @@ static void update_sockets(UIState *s) {
         s->gyro_sensor = sensor.getGyroUncalibrated().getV()[1];
       }
     }
+  }
+  if (sm.updated("gpsPlannerPoints")) {
+    scene.gps_planner_points_timestamp = sm["gpsPlannerPoints"].getLogMonoTime();
+    scene.gps_planner_points = sm["gpsPlannerPoints"].getGpsPlannerPoints();
+    scene.track_name = scene.gps_planner_points.getTrackName();
   }
 }
 

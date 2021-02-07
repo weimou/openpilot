@@ -20,6 +20,7 @@
 #include "qt_window.hpp"
 #include "widgets/drive_stats.hpp"
 #include "widgets/setup.hpp"
+#include "widgets/map.hpp"
 
 #define BACKLIGHT_DT 0.25
 #define BACKLIGHT_TS 2.00
@@ -135,13 +136,28 @@ HomeWindow::HomeWindow(QWidget* parent) : QWidget(parent) {
   layout = new QGridLayout;
   layout->setMargin(0);
 
+  // add margin to bottom-right of map. TODO there has to be a better way...
+  layout->setRowStretch(0, 1);
+  layout->setRowStretch(1, 0);
+  layout->setColumnStretch(0, 1);
+  layout->setColumnStretch(1, 0);
+  layout->setRowMinimumHeight(1, 30);
+  layout->setColumnMinimumWidth(1, 24);
+
   // onroad UI
   glWindow = new GLWindow(this);
-  layout->addWidget(glWindow, 0, 0);
+  // layout->addWidget(glWindow, 0, 0);
+  layout->addWidget(glWindow, 0, 0, -1, -1);
 
   // draw offroad UI on top of onroad UI
   home = new OffroadHome();
-  layout->addWidget(home, 0, 0);
+  // layout->addWidget(home, 0, 0);
+  layout->addWidget(home, 0, 0, -1, -1);
+
+  // map
+  map = new QtMap(this);
+  layout->addWidget(map, 0, 0, Qt::AlignRight | Qt::AlignBottom);
+
   QObject::connect(glWindow, SIGNAL(offroadTransition(bool)), this, SLOT(setVisibility(bool)));
   QObject::connect(this, SIGNAL(openSettings()), home, SLOT(refresh()));
   setLayout(layout);

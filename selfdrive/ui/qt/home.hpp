@@ -91,6 +91,7 @@ protected:
 private:
   QGridLayout* layout;
   OffroadHome* home;
+  QWidget *map;
 
 private slots:
   void setVisibility(bool offroad);

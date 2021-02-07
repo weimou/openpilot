@@ -266,7 +266,9 @@ qt_env = None
 if arch in ["x86_64", "Darwin", "larch64"]:
   qt_env = env.Clone()
 
-  qt_modules = ["Widgets", "Gui", "Core", "DBus", "Multimedia", "Network", "Concurrent"]
+  qt_modules = ["Widgets", "Gui", "Core", "DBus", "Multimedia", "Network", "Concurrent", "Qml", "Quick", "QuickWidgets", "Location", "Positioning"]
+  # qt_modules = ["Widgets", "Gui", "Qml", "Quick", "QuickWidgets", "Core", "DBus", "Location", "Multimedia", "Network", "Positioning"]
+
 
   qt_libs = []
   if arch == "Darwin":
@@ -279,13 +281,16 @@ if arch in ["x86_64", "Darwin", "larch64"]:
     qt_env["LINKFLAGS"] += ["-F" + QT_BASE + "lib"]
     qt_env["FRAMEWORKS"] += [f"Qt{m}" for m in qt_modules] + ["OpenGL"]
   else:
+    QT_BASE = f"/usr/include/{real_arch}-linux-gnu/qt5"
     qt_env['QTDIR'] = "/usr"
     qt_dirs = [
-      f"/usr/include/{real_arch}-linux-gnu/qt5",
-      f"/usr/include/{real_arch}-linux-gnu/qt5/QtGui/5.5.1/QtGui",
-      f"/usr/include/{real_arch}-linux-gnu/qt5/QtGui/5.12.8/QtGui",
+      # f"/usr/include/{real_arch}-linux-gnu/qt5",
+      # f"/usr/include/{real_arch}-linux-gnu/qt5/QtGui/5.5.1/QtGui",
+      # f"/usr/include/{real_arch}-linux-gnu/qt5/QtGui/5.12.8/QtGui",
+      f"{QT_BASE}",
     ]
     qt_dirs += [f"/usr/include/{real_arch}-linux-gnu/qt5/Qt{m}" for m in qt_modules]
+    qt_dirs += [f"{QT_BASE}/Qt{m}" for m in qt_modules]
 
     qt_libs = [f"Qt5{m}" for m in qt_modules]
     if arch == "larch64":
