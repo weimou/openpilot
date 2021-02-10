@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os
+# import os
 from collections import deque
 
 import requests
@@ -16,10 +16,11 @@ MAPBOX_ACCESS_TOKEN_PATH = PERSIST + '/mapbox/access_token'
 
 
 def get_mapbox_access_token():
-  if not os.path.isfile(MAPBOX_ACCESS_TOKEN_PATH):
-    return None
-  with open(MAPBOX_ACCESS_TOKEN_PATH, 'r') as f:
-    return f.read().strip()
+    return "pk.eyJ1IjoiYWxiZXJ0bHVkd2lnIiwiYSI6ImNra3Q4bW5ydDB1dHYydXJ0eHYyNGI5cmEifQ.BqCUvH3GvayncqLhqaA9lA"
+  # if not os.path.isfile(MAPBOX_ACCESS_TOKEN_PATH):
+  #   return None
+  # with open(MAPBOX_ACCESS_TOKEN_PATH, 'r') as f:
+    # return f.read().strip()
 
 
 def try_fetch_mapbox_data(gps_entries):
@@ -38,12 +39,14 @@ def try_fetch_mapbox_data(gps_entries):
       'annotations': 'maxspeed',
       'tidy': 'true',
     }
+    print("printing data")
     print(data)
     response = requests.post('https://api.mapbox.com/matching/v5/mapbox/driving?access_token=' + access_token, data=data, timeout=10)
     json = response.json()
     # print(json)
 
     lastLeg = json['matchings'][-1]['legs'][-1]
+    print("printing lastLeg")
     print(lastLeg)
     return lastLeg
   except Exception as e:
@@ -54,13 +57,14 @@ def try_fetch_mapbox_data(gps_entries):
 
 
 def get_speed_limit(mapbox_leg):
+  print("getting speed limit")
   for maxspeed in mapbox_leg['annotation']['maxspeed']:
     if 'unknown' in maxspeed:
       continue
     elif maxspeed['unit'] == 'km/h':
-      return maxspeed['speed']
+      return maxspeed['speed'] * CV.KPH_TO_MPH
     elif maxspeed['unit'] == 'mph':
-      return maxspeed['speed'] * CV.MPH_TO_KPH
+      return maxspeed['speed']
 
   return 0
 
@@ -100,6 +104,7 @@ def main(sm=None, pm=None):
           msg.gpsPlannerPoints.valid = True
           msg.gpsPlannerPoints.trackName = get_track_name(data)
           msg.gpsPlannerPoints.speedLimit = get_speed_limit(data)
+          print("speed limit is: %f MPH" % msg.gpsPlannerPoints.speedLimit)
         else:
           gps_entries.clear()
 

@@ -288,7 +288,10 @@ def start_managed_process(name):
 
 def start_daemon_process(name):
   params = Params()
+  print('name is: ', name)
   proc, pid_param = daemon_processes[name]
+  print('proc is: ', proc)
+  print('pid_param is: ', pid_param)
   pid = params.get(pid_param, encoding='utf-8')
 
   if pid is not None:
