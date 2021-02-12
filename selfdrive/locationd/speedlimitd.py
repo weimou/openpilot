@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# import os
+#   import os
 from collections import deque
 
 import requests
@@ -48,6 +48,18 @@ def try_fetch_mapbox_data(gps_entries):
     lastLeg = json['matchings'][-1]['legs'][-1]
     print("printing lastLeg")
     print(lastLeg)
+
+    data = {
+        'coordinates': ("-122.42,37.78;-77.03,38.91"),
+        'overview': 'full',
+        'geometries': 'geojson',
+        'steps': 'true'
+    }
+    print("printing nav data")
+    print(data)
+    route_response = requests.post('https://api.mapbox.com/directions/v5/mapbox/driving?access_token=' + access_token, data=data, timeout=10)
+    route_json = route_response.json()
+    print(route_json)
     return lastLeg
   except Exception as e:
     print('Unable to retrieve mapbox road data from %s: %s' % (json, e))
@@ -74,10 +86,11 @@ def get_track_name(mapbox_leg):
 
 
 def main(sm=None, pm=None):
+  print("in main")
   if sm is None:
     sm = messaging.SubMaster(['gpsLocationExternal'])
   if pm is None:
-    pm = messaging.PubMaster(['gpsPlannerPoints'])
+    pm = messaging.PubMaster(['gpsPlannerPointsDEPRECATED'])
 
   gps_entries = deque(maxlen=10) # the max allowed coordinates in an api call is 100, but we shouldn't need that many
 
@@ -95,20 +108,20 @@ def main(sm=None, pm=None):
 
       gps_entries.append(gps)
 
-      msg = messaging.new_message('gpsPlannerPoints')
+      msg = messaging.new_message('gpsPlannerPointsDEPRECATED')
       msg.logMonoTime = sm.logMonoTime['gpsLocationExternal']
 
       if len(gps_entries) > 2: # min allowed coordinates in an api call
         data = try_fetch_mapbox_data(gps_entries)
         if data is not None:
-          msg.gpsPlannerPoints.valid = True
-          msg.gpsPlannerPoints.trackName = get_track_name(data)
-          msg.gpsPlannerPoints.speedLimit = get_speed_limit(data)
-          print("speed limit is: %f MPH" % msg.gpsPlannerPoints.speedLimit)
+          msg.gpsPlannerPointsDEPRECATED.valid = True
+          msg.gpsPlannerPointsDEPRECATED.trackName = get_track_name(data)
+          msg.gpsPlannerPointsDEPRECATED.speedLimit = get_speed_limit(data)
+          print("speed limit is: %f MPH" % msg.gpsPlannerPointsDEPRECATED.speedLimit)
         else:
           gps_entries.clear()
 
-      pm.send('gpsPlannerPoints', msg)
+      pm.send('gpsPlannerPointsDEPRECATED', msg)
 
 
 if __name__ == "__main__":
