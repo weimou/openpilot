@@ -203,14 +203,14 @@ class Controls:
     if self.can_rcv_error or (not CS.canValid and self.sm.frame > 5 / DT_CTRL):
       self.events.add(EventName.canError)
     if (self.sm['health'].safetyModel != self.CP.safetyModel and self.sm.frame > 2 / DT_CTRL) or \
-      self.mismatch_counter >= 200:
+      self.mismatch_counter >= 200: 
       self.events.add(EventName.controlsMismatch)
 
     if len(self.sm['radarState'].radarErrors):
       self.events.add(EventName.radarFault)
     elif not self.sm.valid['liveParameters']:
       self.events.add(EventName.vehicleModelInvalid)
-    elif not self.sm.all_alive_and_valid():
+    elif not self.sm.all_alive_and_valid() and not SIMULATION:
       self.events.add(EventName.commIssue)
       if not self.logged_comm_issue:
         cloudlog.error(f"commIssue - valid: {self.sm.valid} - alive: {self.sm.alive}")
