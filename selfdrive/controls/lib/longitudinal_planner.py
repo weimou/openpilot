@@ -180,9 +180,11 @@ class Planner():
       if self.slow_on_curve:
         self.v_model, self.a_model = speed_smoother(self.v_acc_start, self.a_acc_start,
                                                       model_speed, 2*accel_limits[1],
-                                                      accel_limits[0], 2*jerk_limits[1], jerk_limits[0],
+                                                      3*accel_limits[0], 2*jerk_limits[1], 3*jerk_limits[0],
                                                       LON_MPC_STEP)
 
+      # print("accel_limits 0 is: ", accel_limits[0])
+      # print("accel_limits 1 is: ", accel_limits[1])
       # cruise speed can't be negative even is user is distracted
       self.v_cruise = max(self.v_cruise, 0.)
     else:
