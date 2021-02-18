@@ -271,6 +271,20 @@ static void ui_draw_vision_target_speed(UIState *s)
   ui_draw_text(s, rect.centerX(), 242, target_speed_str.c_str(), 48 * 2.5, COLOR_WHITE, "sans-bold");
 }
 
+static void ui_draw_vision_speed_limit(UIState *s)
+{
+  float speed_limit = s->scene.gpsplaner_points.getSpeedLimit();
+  const Rect rect = {s->viz_rect.x + (bdr_s * 18), int(s->viz_rect.y + (bdr_s * 1.5)), 184, 202};
+  ui_fill_rect(s->vg, rect, COLOR_BLACK_ALPHA(100), 30.);
+  ui_draw_rect(s->vg, rect, COLOR_WHITE_ALPHA(100), 10, 20.);
+
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
+  ui_draw_text(s, rect.centerX(), 148, "Speed Limit", 26 * 1.5, COLOR_WHITE_ALPHA(100), "sans-regular");
+
+  const std::string speed_limit_str = std::to_string((int)std::nearbyint(speed_limit));
+  ui_draw_text(s, rect.centerX(), 242, speed_limit_str.c_str(), 48 * 2.5, COLOR_WHITE, "sans-bold");
+}
+
 static void ui_draw_vision_speed(UIState *s)
 {
   const float speed = std::max(0.0, s->scene.car_state.getVEgo() * (s->is_metric ? 3.6 : 2.2369363));
@@ -359,6 +373,7 @@ static void ui_draw_vision_header(UIState *s)
   ui_draw_vision_maxspeed(s);
   ui_draw_vision_speed(s);
   ui_draw_vision_target_speed(s);
+  ui_draw_vision_speed_limit(s);
   ui_draw_vision_event(s);
 }
 

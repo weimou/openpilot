@@ -116,6 +116,7 @@ typedef struct UIScene {
   cereal::CarState::Reader car_state;
   cereal::ControlsState::Reader controls_state;
   cereal::LongitudinalPlan::Reader longitudinal_plan;
+  cereal::GPSPlannerPoints::Reader gpsplaner_points;
   cereal::DriverState::Reader driver_state;
   cereal::DriverMonitoringState::Reader dmonitoring_state;
 

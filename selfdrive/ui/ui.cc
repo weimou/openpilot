@@ -42,7 +42,8 @@ static void ui_init_vision(UIState *s) {
 
 void ui_init(UIState *s) {
   s->sm = new SubMaster({"modelV2", "controlsState", "uiLayoutState", "liveCalibration", "radarState", "thermal", "frame", "liveLocationKalman",
-                         "health", "carParams", "driverState", "driverMonitoringState", "sensorEvents", "carState", "ubloxGnss", "longitudinalPlan"});
+                         "health", "carParams", "driverState", "driverMonitoringState", "sensorEvents", "carState", "ubloxGnss", "longitudinalPlan",
+                         "gpsPlannerPointsDEPRECATED"});
 
   s->started = false;
   s->status = STATUS_OFFROAD;
@@ -130,6 +131,9 @@ static void update_sockets(UIState *s) {
   if (s->started && sm.updated("longitudinalPlan")) {
     scene.longitudinal_plan = sm["longitudinalPlan"].getLongitudinalPlan();
   }
+  if (s->started && sm.updated("gpsPlannerPointsDEPRECATED")) {
+    scene.gpsplaner_points = sm["gpsPlannerPointsDEPRECATED"].getGpsPlannerPointsDEPRECATED();
+  }
   if (sm.updated("carState")) {
     scene.car_state = sm["carState"].getCarState();
   }
@@ -208,7 +212,8 @@ static void update_sockets(UIState *s) {
       }
     }
   }
-  s->started = scene.thermal.getStarted() || scene.frontview;
+  s->started = true;
+  // s->started = scene.thermal.getStarted() || scene.frontview;
 }
 
 static void update_alert(UIState *s) {
