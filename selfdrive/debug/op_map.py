@@ -16,7 +16,7 @@ managed_processes = {
   "calibrationd": "selfdrive.locationd.calibrationd",
   "camerad": ("selfdrive/camerad", ["./camerad"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
-#   "speedlimitd": "selfdrive.locationd.speedlimitd",
+  "speedlimitd": "selfdrive.locationd.speedlimitd",
 #   "locationd": "selfdrive.locationd.locationd",
 #   "dmonitoringd": "selfdrive.monitoring.dmonitoringd",
 #   "ubloxd": ("selfdrive/locationd", ["./ubloxd"]),
