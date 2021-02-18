@@ -103,7 +103,7 @@ def main(sm=None, pm=None):
       if len(gps_entries) > 0:
         if gps.timestamp - gps_entries[0].timestamp < -5_000:
           gps_entries.clear() # reset history if time's out of whack (like from skipping around in unlogger)
-        elif gps.timestamp - gps_entries[-1].timestamp < 5_000:
+        elif gps.timestamp - gps_entries[-1].timestamp < 1_000:
           continue # api recommends 5 second sample rate
 
       gps_entries.append(gps)

@@ -245,7 +245,7 @@ static void ui_draw_vision_maxspeed(UIState *s)
   ui_draw_rect(s->vg, rect, COLOR_WHITE_ALPHA(100), 10, 20.);
 
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
-  ui_draw_text(s, rect.centerX(), 148, "MAX", 26 * 2.5, COLOR_WHITE_ALPHA(is_cruise_set ? 200 : 100), "sans-regular");
+  ui_draw_text(s, rect.centerX(), 148, "SET", 26 * 2.5, COLOR_WHITE_ALPHA(is_cruise_set ? 200 : 100), "sans-regular");
   if (is_cruise_set)
   {
     const std::string maxspeed_str = std::to_string((int)std::nearbyint(maxspeed));
@@ -280,9 +280,15 @@ static void ui_draw_vision_speed_limit(UIState *s)
 
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   ui_draw_text(s, rect.centerX(), 148, "Speed Limit", 26 * 1.5, COLOR_WHITE_ALPHA(100), "sans-regular");
-
-  const std::string speed_limit_str = std::to_string((int)std::nearbyint(speed_limit));
-  ui_draw_text(s, rect.centerX(), 242, speed_limit_str.c_str(), 48 * 2.5, COLOR_WHITE, "sans-bold");
+  if (speed_limit > 0)
+  {
+    const std::string speed_limit_str = std::to_string((int)std::nearbyint(speed_limit));
+    ui_draw_text(s, rect.centerX(), 242, speed_limit_str.c_str(), 48 * 2.5, COLOR_WHITE, "sans-bold");
+  }
+  else
+  {
+    ui_draw_text(s, rect.centerX(), 242, "N/A", 48 * 2.5, COLOR_WHITE, "sans-semibold");
+  }
 }
 
 static void ui_draw_vision_speed(UIState *s)
