@@ -69,7 +69,7 @@ def try_fetch_mapbox_data(gps_entries):
 
 
 def get_speed_limit(mapbox_leg):
-  print("getting speed limit")
+  # print("getting speed limit")
   for maxspeed in mapbox_leg['annotation']['maxspeed']:
     if 'unknown' in maxspeed:
       continue
@@ -104,7 +104,7 @@ def main(sm=None, pm=None):
         if gps.timestamp - gps_entries[0].timestamp < -5_000:
           gps_entries.clear() # reset history if time's out of whack (like from skipping around in unlogger)
         elif gps.timestamp - gps_entries[-1].timestamp < 1_000:
-          continue # api recommends 5 second sample rate
+          continue # api recommends 5 second sample rate but we use 1 second sample rate.
 
       gps_entries.append(gps)
 
@@ -117,7 +117,7 @@ def main(sm=None, pm=None):
           msg.gpsPlannerPointsDEPRECATED.valid = True
           msg.gpsPlannerPointsDEPRECATED.trackName = get_track_name(data)
           msg.gpsPlannerPointsDEPRECATED.speedLimit = get_speed_limit(data)
-          print("speed limit is: %f MPH" % msg.gpsPlannerPointsDEPRECATED.speedLimit)
+          # print("speed limit is: %f MPH" % msg.gpsPlannerPointsDEPRECATED.speedLimit)
         else:
           gps_entries.clear()
 
